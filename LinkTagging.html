@@ -1,0 +1,35 @@
+<script>   
+for (i = 0; i < document.getElementsByTagName("A").length; i++) {
+    //Link Type detection and attribution to data-clic-type
+    if(document.getElementsByTagName("A")[i].getAttribute("href") == null){
+    }else if(document.getElementsByTagName("A")[i].getAttribute("href").startsWith('htt') && !(document.getElementsByTagName("A")[i].getAttribute("href").includes(".internet.com"))){
+        typeClicked = 'exit'
+    }else if(document.getElementsByTagName("A")[i].getAttribute("href").includes("#nav-")){
+        typeClicked = 'navigation'
+    }else if((document.getElementsByTagName("A")[i].getAttribute("href").includes(".pdf"))||(document.getElementsByTagName("A")[i].getAttribute("href").includes(".xls"))){
+        typeClicked = 'download'
+    }else if(document.getElementsByTagName("A")[i].getAttribute("href").includes('#go-')){
+        typeClicked = 'action'
+    }else{typeClicked = 'navigation'}
+    document.getElementsByTagName("A")[i].setAttribute('data-click-type', typeClicked);
+
+    //Link position detection and attribution to data-click-position
+    document.getElementsByTagName('A')[i].setAttribute('data-click-position',i+1);
+    
+    //Link text detection, concatenation with page name and attribution to data-click-name 
+    if(chapterA == "" && chapterB == "" && chapterC ==""){
+        document.getElementsByTagName("A")[i].setAttribute('data-click-name',page +'-'+document.getElementsByTagName('a')[i].text);
+    }else if(chapterA == undefined && chapterB == undefined && chapterC == undefined){
+        document.getElementsByTagName("A")[i].setAttribute('data-click-name',page +'-'+document.getElementsByTagName('a')[i].text);
+    }else if(chapterA !="" && chapterB =="" && chapterC ==""){
+        document.getElementsByTagName("A")[i].setAttribute('data-click-name', chapterA+'::'+page+'-'+document.getElementsByTagName('a')[i].text);
+    }else if(chapterA !="" && chapterB !="" && chapterC ==""){
+        document.getElementsByTagName("A")[i].setAttribute('data-click-name', chapterA+'::'+chapterB+'::'+page+'-'+document.getElementsByTagName('a')[i].text);
+    }else if(chapterA !="" && chapterB !="" && chapterC !=""){
+        document.getElementsByTagName("A")[i].setAttribute('data-click-name', chapterA+'::'+chapterB+'::'+chapterC+'::'+page+'-'+document.getElementsByTagName('a')[i].text);
+    }
+    //Level 2 site of the current page attribution to data-click-s2
+    var s2Click = s2;
+    document.getElementsByTagName("A")[i].setAttribute('data-click-s2', s2Click);
+}        
+</script>
