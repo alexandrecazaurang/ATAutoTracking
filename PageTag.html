@@ -1,0 +1,120 @@
+<script type="text/javascript" src="http://tag.aticdn.net/123456/smarttag.js"></script>
+<script>
+        //URL Parsing
+        var parser = document.createElement('a');
+        parser.href = document.URL;
+        parser.protocol; // => "http:"
+        parser.hostname; // => "example.com"
+        parser.port; // => "3000"
+        parser.pathname; // => "/pathname/"
+        parser.search; // => "?search=test"
+        parser.hash; // => "#hash"
+        parser.host; // => "example.com:3000"    
+
+        //Chapters for URL ending by extensions (http://www.internet.com/test/AT/GTMTag/SmartTag/page.html )
+        var pathNameA1 = parser.pathname.replace(/\//g, '::');   
+        var pathNameA2 = pathNameA1.substring(2); // 
+        var pathNameA = '' + pathNameA2 + '';
+        var pageFileA1 = pathNameA.match(/(::)(?!.*\b\1\b).+/g); 
+        var pageFileA2 = '' + pageFileA1 + '';
+        var pageNoSlash = pageFileA2.substring(2);              
+
+        //Chapters for URL ending by a slash (http://www.internet.com/test/blog/)   
+        var pathNameB1 = parser.pathname;
+        var pathNameB1 = pathNameB1.substring(0, pathNameB1.lastIndexOf("/")); 
+        var pathNameB2 = pathNameB1.replace(/\//g, '::'); 
+        var pathNameB = pathNameB2.substring(2); 
+        if (pathNameB.match(/::/g) == null) {
+            var countPathNameB = 0;
+        }else{
+            var countPathNameB = pathNameB.match(/::/g).length;
+        }
+        var pageSlashA1 = pathNameB.match(/(::)(?!.*\b\1\b).+/g); 
+        var pageSlash = '' + pageSlashA1 + ''.substring(2); 
+
+        //URL detection implying chapter variables choices
+        if(document.URL == "http://www.internet.com/" || document.URL == "http://www.internet.com/index.html" || document.URL == "http://www.my-domain-is-so-cool.com/" || document.URL == "http://www.my-domain-is-so-cool.com/index.html" || document.URL == "http://www.this-one-is-cool-too.com/" || document.URL == "http://www.this-one-is-cool-too.com/index.html"){
+            var page = "home";
+        }else if (document.URL.slice(-1) == '/' && countPathNameB == 1) { //"http://www.internet.com/test/blog/"
+            var myRegexp0nA2 = /([a-zA-Z0-9-_]*)::/g;
+            var regexOnA2 = myRegexp0nA2.exec(pathNameB);
+            var chapterAT1 = regexOnA2[1];
+            var pageSlashCase = pageSlash.substring(2);
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = '';
+            var chapterC = '';
+            var page = pageSlashCase;
+        }else if (document.URL.slice(-1) == '/' && countPathNameB == 2) { //"http://www.internet.com/test/blog/example/"
+            var myRegexp0nA3 = /([a-zA-Z0-9-_]*)::([a-zA-Z0-9-_]*)::/g;
+            var regexOnA3 = myRegexp0nA3.exec(pathNameB);
+            var chapterAT1 = regexOnA3[1];
+            var chapterAT2 = regexOnA3[2];
+            var pageSlashCase = pageSlash.substring(2);
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = chapterAT2.replace('::', '/');
+            var chapterC = '';
+            var page = pageSlashCase;
+        }else if (document.URL.slice(-1) == '/' && countPathNameB >= 3) { //"http://www.internet.com/test/blog/2016/09/11/bardenas/"
+            var myRegexp0nA4 = /([a-zA-Z0-9-_]*)::?([a-zA-Z0-9-_]*)::?([a-zA-Z0-9-_]*.+)::/g;
+            var regexOnA4 = myRegexp0nA4.exec(pathNameB);
+            var chapterAT1 = regexOnA4[1];
+            var chapterAT2 = regexOnA4[2];
+            var chapterAT3 = regexOnA4[3];
+            var pageSlashCase = pageSlash.substring(2);
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = chapterAT2.replace('::', '/');
+            var chapterC = chapterAT3.replace(/::/g, '/');
+            var page = pageSlashCase;
+        }else if (document.URL.slice(-1) != '/' && pathNameA.match(/::/g) == null) { //"http://www.internet.com/testurl.html"    
+            var chapterA = '';
+            var chapterB = '';
+            var chapterC = '';
+            var page = parser.pathname.substring(1);
+        }else if (document.URL.slice(-1) != '/' && pathNameA.match(/::/g).length == 1) { //"http://www.internet.com/images/testurl.html"
+            var myRegexp0nB2 = /([a-zA-Z0-9-_]*)::/g;
+            var regexOnB2 = myRegexp0nB2.exec(pathNameA);
+            var chapterAT1 = regexOnB2[1];
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = '';
+            var chapterC = '';
+            var page = pageNoSlash;
+        }else if (document.URL.slice(-1) != '/' && pathNameA.match(/::/g).length == 2) { //"http://www.internet.com/images/test/testurl.html"
+            var myRegexp0nB3 = /([a-zA-Z0-9-_]*)::([a-zA-Z0-9-_]*)::/g;
+            var regexOnB3 = myRegexp0nB3.exec(pathNameA);
+            var chapterAT1 = regexOnB3[1];
+            var chapterAT2 = regexOnB3[2];
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = chapterAT2.replace('::', '/');
+            var chapterC = '';
+            var page = pageNoSlash;
+        }else if (document.URL.slice(-1) != '/' && pathNameA.match(/::/g).length >= 3) { //"http://www.internet.com/test/AT/GTMTag/SmartTag/testurl.html"
+            var myRegexp0nB4 = /([a-zA-Z0-9-_]*)::?([a-zA-Z0-9-_]*)::?([a-zA-Z0-9-_]*.+)::/g;
+            var regexOnB4 = myRegexp0nB4.exec(pathNameA);
+            var chapterAT1 = regexOnB4[1];
+            var chapterAT2 = regexOnB4[2];
+            var chapterAT3 = regexOnB4[3];
+            var chapterA = chapterAT1.replace('::', '/');
+            var chapterB = chapterAT2.replace('::', '/');
+            var chapterC = chapterAT3.replace('::', '/');
+            var page = pageNoSlash;
+        }
+
+        //Level 2 Definition
+        if(parser.hostname == "www.internet.com") {
+            var s2 = 1;
+        }else if (parser.hostname =="www.my-domain-is-so-cool.com") {
+            var s2 = 2;
+        }else if (parser.hostname == "www.this-one-is-cool-too.com") {
+            var s2 = 3;
+		}
+        //AT Page Tagging   
+        var tag = new ATInternet.Tracker.Tag();
+        tag.page.set({
+            name: page,
+            chapter1: chapterA,
+            chapter2: chapterB,
+            chapter3: chapterC,
+            level2: s2
+        });
+        tag.dispatch();
+    </script>
